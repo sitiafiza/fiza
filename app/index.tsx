@@ -1,54 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import RecipeCard from '../components/RecipeCard'; // ← Import komponen
+import { ImageBackground } from 'react-native';
 
-interface Recipe {
-  idMeal: string;
-  strMeal: string;
-  strMealThumb: string;
-}
-const HomeScreen = () => {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+const Index = () => {
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
-        const data = await response.json();
-        setRecipes(data.meals || []);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchRecipes();
-  }, []);
-
   return (
+    <ImageBackground
+        source={require('../assets/images/makanan.png')}
+        style={styles.background}
+        resizeMode="cover"
+        >
+
     <View style={styles.container}>
-      <Text style={styles.title}>Resep Populer</Text>
-      <FlatList
-        data={recipes}
-        keyExtractor={(item) => item.idMeal}
-        renderItem={({ item }) => (
-          <RecipeCard
-            id={item.idMeal}
-            name={item.strMeal}
-            image={item.strMealThumb}
-            onPress={() => router.push(`./detail/${item.idMeal}`)}
-          />
-        )}
-        ListEmptyComponent={<Text style={styles.emptyText}>Tidak ada resep ditemukan.</Text>}
-      />
+      <Text style={styles.buttonText}>Welcome to Resep Makanan ala Fiza</Text>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/home')}>
+        <Text style={styles.buttonText}>Mulai Jelajahi Resep</Text>
+      </TouchableOpacity>
     </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-  title: { fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 20 },
-  emptyText: { textAlign: 'center', fontSize: 16, color: '#888' },
+    background:{
+        flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  title: { fontSize: 25, fontWeight: 'bold', textAlign: 'center', marginBottom: 40 },
+  button: {
+    backgroundColor: '#f57c00',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+  },
+  buttonText: { color: '#fff', fontSize: 20, fontWeight: 'bold' },
 });
 
-export default HomeScreen;
+export default Index;
